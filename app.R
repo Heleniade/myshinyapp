@@ -61,4 +61,8 @@ server <- function(input, output) {
   })
 }
 
+shinylive::export(
+  appdir=".",
+  destdir="docs"
+)
 shinyApp(ui = ui, server = server)
