@@ -4,7 +4,14 @@ library(ggplot2)
 library(glue)
 library(DT)
 
+thematic_shiny(
+  font = "auto",
+)
 ui <- fluidPage(
+  theme = bs_theme(
+    version = 5,
+    bootswatch = "darkly"
+  ),
   titlePanel("My First Shiny App"),
   h1("Star Wars Characters"),
   h2("My app from scratch"),
@@ -39,7 +46,7 @@ server <- function(input, output) {
       ggplot(aes(x = height)) +
       geom_histogram(
         binwidth = 10,
-        fill = "darkgray",
+        fill = "grey",
         color = "white"
       ) +
       labs(
@@ -61,8 +68,5 @@ server <- function(input, output) {
   })
 }
 
-shinylive::export(
-  appdir=".",
-  destdir="docs"
-)
+
 shinyApp(ui = ui, server = server)
