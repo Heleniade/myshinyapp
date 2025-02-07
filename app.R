@@ -43,10 +43,14 @@ ui <- fluidPage(
 )
 
 server <- function(input, output) {
-  output$StarWarsPlot <- renderPlot({
-    starwars |>
+  rv <- reactiveValues()
+  observeEvent(c(input$taille,input$gender),{
+    rv$starwars_filter <- starwars |>
       filter(height > input$taille) |>
-      filter(gender == input$gender) |>
+      filter(gender == input$gender)
+    })
+  output$StarWarsPlot <- renderPlot({
+    rv$starwars_filter |>
       ggplot(aes(x = height)) +
       geom_histogram(
         binwidth = 10,
@@ -58,17 +62,13 @@ server <- function(input, output) {
       )
   })
   output$StarWarsTitle <- renderText({
-    nb_ligne <- starwars |>
-      filter(height > input$taille) |>
-      filter(gender == input$gender) |>
+    nb_ligne <- rv$starwars_filter |>
       nrow()
 
     glue("nombre de ligne : {nb_ligne}")
   })
   output$StarWarsTable <- renderDT({
-    starwars |>
-      filter(height > input$taille) |>
-      filter(gender == input$gender)
+    rv$starwars_filter
   })
   observeEvent(input$boutton, {
                message("Vous avez cliqué sur le bouton")
